@@ -1,13 +1,13 @@
 {
   "name": "ndx-roster",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "roster of connected users for ndx-framework",
   "main": "build/index.js",
   "scripts": {
     "test": "node build/test.js"
   },
   "ndx": true,
-  "loadOrder": 5,
+  "loadOrder": 6,
   "repository": {
     "type": "git",
     "url": "https://github.com/ndxbxrme/ndx-roster"
@@ -23,5 +23,8 @@
     "grunt-contrib-nodeunit": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "load-grunt-tasks": "^3.5.2"
+  },
+  "dependencies": {
+    "async": "^2.5.0"
   }
 }
