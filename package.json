@@ -1,6 +1,6 @@
 {
   "name": "ndx-roster",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "roster of connected users for ndx-framework",
   "main": "build/index.js",
   "scripts": {
