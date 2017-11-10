@@ -1,8 +1,10 @@
 (function() {
   'use strict';
-  var async;
+  var async, objtrans;
 
   async = require('async');
+
+  objtrans = require('objtrans');
 
   module.exports = function(ndx) {
     var doRoster;
@@ -11,27 +13,35 @@
         return cb(users);
       }
     };
+    ndx.roster.pattern = {
+      _id: true,
+      email: true
+    };
     doRoster = function(socket) {
       if (socket.user) {
         return ndx.socket.users(function(users) {
           return ndx.roster.filter(users, function(users) {
+            var outusers;
+            outusers = [];
             return async.each(users, function(user, callback) {
-              var myusers;
-              myusers = [];
-              Object.assign(myusers, users);
-              if (ndx.permissions) {
-                return ndx.permissions.check('select', {
-                  table: 'users',
-                  user: user,
-                  objs: myusers
-                }, ndx.permissions.dbPermissions(), function() {
-                  ndx.socket.emitToUsers([user], 'roster', myusers);
+              outusers.push(objtrans(user, ndx.roster.pattern));
+              return callback();
+            }, function() {
+              return async.each(users, function(user, callback) {
+                if (ndx.permissions) {
+                  return ndx.permissions.check('select', {
+                    table: 'users',
+                    user: user,
+                    objs: users
+                  }, ndx.permissions.dbPermissions(), function() {
+                    ndx.socket.emitToUsers([user], 'roster', outusers);
+                    return callback();
+                  });
+                } else {
+                  ndx.socket.emitToUsers([user], 'roster', outusers);
                   return callback();
-                });
-              } else {
-                ndx.socket.emitToUsers([user], 'roster', myusers);
-                return callback();
-              }
+                }
+              });
             });
           });
         });
