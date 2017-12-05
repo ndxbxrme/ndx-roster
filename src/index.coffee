@@ -13,19 +13,21 @@ module.exports = (ndx) ->
     if socket.user
       ndx.socket.users (users) ->
         ndx.roster.filter users, (users) ->
-          outusers = []
+          allusers = []
           async.each users, (user, callback) ->
-            outusers.push objtrans user, ndx.roster.pattern
+            allusers.push objtrans(user, ndx.roster.pattern)
             callback()
           , ->
             async.each users, (user, callback) ->
+              outusers = JSON.parse JSON.stringify allusers
               if ndx.permissions
                 ndx.permissions.check 'select',
                   table: 'users'
                   user: user
-                  objs: users
+                  objs: outusers
                 , ndx.permissions.dbPermissions(), ->
-                  ndx.socket.emitToUsers [user], 'roster', outusers
+                  if user
+                    ndx.socket.emitToUsers [user], 'roster', outusers
                   callback()
               else
                 ndx.socket.emitToUsers [user], 'roster', outusers

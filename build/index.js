@@ -21,20 +21,24 @@
       if (socket.user) {
         return ndx.socket.users(function(users) {
           return ndx.roster.filter(users, function(users) {
-            var outusers;
-            outusers = [];
+            var allusers;
+            allusers = [];
             return async.each(users, function(user, callback) {
-              outusers.push(objtrans(user, ndx.roster.pattern));
+              allusers.push(objtrans(user, ndx.roster.pattern));
               return callback();
             }, function() {
               return async.each(users, function(user, callback) {
+                var outusers;
+                outusers = JSON.parse(JSON.stringify(allusers));
                 if (ndx.permissions) {
                   return ndx.permissions.check('select', {
                     table: 'users',
                     user: user,
-                    objs: users
+                    objs: outusers
                   }, ndx.permissions.dbPermissions(), function() {
-                    ndx.socket.emitToUsers([user], 'roster', outusers);
+                    if (user) {
+                      ndx.socket.emitToUsers([user], 'roster', outusers);
+                    }
                     return callback();
                   });
                 } else {
