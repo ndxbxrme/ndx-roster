@@ -1,6 +1,6 @@
 {
   "name": "ndx-roster",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "roster of connected users for ndx-framework",
   "main": "build/index.js",
   "scripts": {
@@ -26,6 +26,6 @@
   },
   "dependencies": {
     "async": "^2.5.0",
-    "objtrans": "0.0.14"
+    "objtrans": "*"
   }
 }
